@@ -3,7 +3,6 @@ using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace GraphicEditor.Models
 {
@@ -17,7 +16,7 @@ namespace GraphicEditor.Models
         {
             _undoImages = new Stack<SKBitmap>();
             _redoImages = new Stack<SKBitmap>();
-            _currentImage = new SKBitmap(800, 600);
+            _currentImage = new SKBitmap();
         }
 
         public SKBitmap CurrentImage
@@ -29,7 +28,7 @@ namespace GraphicEditor.Models
         public bool CanUndo => _undoImages.Count > 0;
         public bool CanRedo => _redoImages.Count > 0;
 
-        public void NewImage(int width, int height)
+        public void NewFile(int width, int height)
         {
             var image = new SKBitmap(width, height);
             using (var canvas = new SKCanvas(image))
