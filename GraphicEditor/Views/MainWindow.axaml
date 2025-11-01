@@ -1,6 +1,7 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:GraphicEditor.ViewModels"
+        xmlns:conv="using:GraphicEditor.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
@@ -11,19 +12,33 @@
         WindowState="Maximized">
 
     <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
         <vm:MainWindowViewModel/>
     </Design.DataContext>
-    <StackPanel Orientation="Vertical">
-		<StackPanel Orientation="Horizontal">
 
+    <Window.Resources>
+        <conv:BitmapConverter x:Key="BitmapConverter"/>
+    </Window.Resources>
+
+    <Grid RowDefinitions="auto, *">
+		<StackPanel Grid.Row="0" Orientation="Horizontal">
+            <TextBlock>Пока ничего</TextBlock>
         </StackPanel>
-        <Grid ColumnDefinitions="auto, *">
+        <Grid Grid.Row="1" ColumnDefinitions="auto, *">
             <StackPanel Orientation="Vertical" Grid.Column="0">
-
+                <TextBlock>Инструмент</TextBlock>
             </StackPanel>
+            <Border Grid.Column="1" Background="#2B2B2B" Margin="5" Padding="10">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+                              VerticalScrollBarVisibility="Auto"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center">
+                    <Image Source="{Binding Editor.CurrentImage, Converter={StaticResource BitmapConverter}}"
+                           Stretch="None"
+                           MaxWidth="{Binding Editor.CurrentImage.Width}"
+                           MaxHeight="{Binding Editor.CurrentImage.Height}"/>
+                </ScrollViewer>
+            </Border>
         </Grid>
-    </StackPanel>
+    </Grid>
 
 </Window>
