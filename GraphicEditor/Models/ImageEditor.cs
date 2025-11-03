@@ -60,6 +60,31 @@ namespace GraphicEditor.Models
             }
         }
 
+        public void SaveFile(string path)
+        {
+            try
+            {
+                using var stream = File.Create(path);
+
+                var extension = Path.GetExtension(path).ToLower();
+                var format = extension switch
+                {
+                    ".jpg" or ".jpeg" => SKEncodedImageFormat.Jpeg,
+                    ".png" => SKEncodedImageFormat.Png,
+                    ".bmp" => SKEncodedImageFormat.Bmp,
+                    _ => SKEncodedImageFormat.Png
+                };
+
+                using var image = SKImage.FromBitmap(CurrentImage);
+                using var data = image.Encode(format, 100);
+                data.SaveTo(stream);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving file: {ex.Message}");
+            }
+        }
+
         public void SaveState()
         {
             if (CurrentImage != null)
