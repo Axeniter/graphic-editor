@@ -1,0 +1,32 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="GraphicEditor.Views.NewFileDialog"
+        Title="New Image"
+        Width="300"
+        Height="200"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+    
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock Text="Create New Image" FontSize="16" FontWeight="Bold"/>
+        
+        <Grid ColumnDefinitions="*,*" RowDefinitions="auto,auto" RowSpacing="10">
+            <TextBlock Text="Width:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+            <NumericUpDown x:Name="WidthBox" Grid.Row="0" Grid.Column="1" 
+                          Value="800" Minimum="1" Maximum="10000"
+                          FormatString="F0" Increment="1"/>
+            
+            <TextBlock Text="Height:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+            <NumericUpDown x:Name="HeightBox" Grid.Row="1" Grid.Column="1" 
+                          Value="600" Minimum="1" Maximum="10000"
+                          FormatString="F0" Increment="1"/>
+        </Grid>
+        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click"/>
+            <Button x:Name="CreateButton" Content="Create" IsDefault="True" Click="CreateButton_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>
