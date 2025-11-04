@@ -11,12 +11,15 @@ namespace GraphicEditor.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private ImageEditor _editor;
+        private OperationService _operationService;
         private IFileDialogService _fileDialogService;
 
         public MainWindowViewModel()
         {
             _editor = new ImageEditor();
+            _operationService = new OperationService();
             _fileDialogService = new FileDialogService();
+
             _editor.NewFile(800,600);
 
             UndoCommand = ReactiveCommand.Create(_editor.Undo);
@@ -24,6 +27,8 @@ namespace GraphicEditor.ViewModels
             OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileAsync);
             SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFileAsync);
             NewFileCommand = ReactiveCommand.CreateFromTask(ShowNewFileDialogAsync);
+            RotateLeftCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_operationService.RotateLeft));
+            RotateRightCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_operationService.RotateRight));
         }
 
         public ImageEditor Editor => _editor;
@@ -69,5 +74,7 @@ namespace GraphicEditor.ViewModels
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
         public ReactiveCommand<Unit, Unit> UndoCommand { get; }
         public ReactiveCommand<Unit, Unit> RedoCommand { get; }
+        public ReactiveCommand<Unit, Unit> RotateLeftCommand { get; }
+        public ReactiveCommand<Unit, Unit> RotateRightCommand { get; }
     }
 }

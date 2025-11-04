@@ -35,8 +35,8 @@
                     <MenuItem Header="Exit"/>
                 </MenuItem>
                 <MenuItem Header="Edit">
-					<MenuItem Header="Rotate left"/>
-                    <MenuItem Header="Rotate right"/>
+					<MenuItem Header="Rotate left" Command="{Binding RotateLeftCommand}"/>
+                    <MenuItem Header="Rotate right" Command="{Binding RotateRightCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Filters">
 					<MenuItem Header="Blur"/>
