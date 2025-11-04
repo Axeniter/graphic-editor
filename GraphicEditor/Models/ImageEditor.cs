@@ -85,6 +85,12 @@ namespace GraphicEditor.Models
             }
         }
 
+        public void ApplyOperation(IImageOperation operation)
+        {
+            SaveState();
+            CurrentImage = operation.ProcessImage(CurrentImage);
+        }
+
         public void SaveState()
         {
             if (CurrentImage != null)

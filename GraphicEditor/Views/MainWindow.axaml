@@ -24,10 +24,6 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <Window.Resources>
-        <conv:BitmapConverter x:Key="BitmapConverter"/>
-    </Window.Resources>
-
     <Grid RowDefinitions="auto, *">
 		<StackPanel Grid.Row="0" Orientation="Horizontal" Margin="3">
             <Menu>
