@@ -8,5 +8,9 @@ namespace GraphicEditor.Views
         {
             InitializeComponent();
         }
+
+        private void SKImageView_ActualThemeVariantChanged(object? sender, System.EventArgs e)
+        {
+        }
     }
 }

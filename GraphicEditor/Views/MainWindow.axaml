@@ -4,6 +4,7 @@
         xmlns:conv="using:GraphicEditor.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:siv="https://github.com/kekyo/SkiaImageView"
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
         x:Class="GraphicEditor.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -63,10 +64,9 @@
                               VerticalScrollBarVisibility="Auto"
                               VerticalAlignment="Center"
                               HorizontalAlignment="Center">
-                    <Image Source="{Binding Editor.CurrentImage, Converter={StaticResource BitmapConverter}}"
-                           Stretch="None"
-                           MaxWidth="{Binding Editor.CurrentImage.Width}"
-                           MaxHeight="{Binding Editor.CurrentImage.Height}"/>
+                    <siv:SKImageView
+                        Stretch="Uniform"
+                        Source="{Binding Editor.CurrentImage}" />
                 </ScrollViewer>
             </Border>
         </Grid>
