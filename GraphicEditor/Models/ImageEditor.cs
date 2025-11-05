@@ -1,4 +1,7 @@
-﻿using ReactiveUI;
+﻿using Avalonia;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
+using ReactiveUI;
 using SkiaSharp;
 using System;
 using System.Collections.Generic;
@@ -30,6 +33,72 @@ namespace GraphicEditor.Models
         public void Refresh()
         {
             this.RaisePropertyChanged(nameof(CurrentImage));
+        }
+
+        private WriteableBitmap ConvertSKBitmapToWriteableBitmap(SKBitmap skBitmap)
+        {
+            var writeableBitmap = new WriteableBitmap(
+                new PixelSize(skBitmap.Width, skBitmap.Height),
+                new Vector(96, 96),
+                PixelFormat.Bgra8888);
+
+            using (var buffer = writeableBitmap.Lock())
+            {
+                unsafe
+                {
+                    var ptr = (byte*)buffer.Address;
+
+                    var skPixels = skBitmap.GetPixels();
+                    var sourcePtr = (byte*)skPixels.ToPointer();
+
+                    for (int y = 0; y < skBitmap.Height; y++)
+                    {
+                        for (int x = 0; x < skBitmap.Width; x++)
+                        {
+                            var sourceIndex = (y * skBitmap.RowBytes) + (x * 4);
+                            var targetIndex = (y * buffer.RowBytes) + (x * 4);
+
+                            ptr[targetIndex + 0] = sourcePtr[sourceIndex + 2];
+                            ptr[targetIndex + 1] = sourcePtr[sourceIndex + 1];
+                            ptr[targetIndex + 2] = sourcePtr[sourceIndex + 0];
+                            ptr[targetIndex + 3] = sourcePtr[sourceIndex + 3];
+                        }
+                    }
+                }
+            }
+
+            return writeableBitmap;
+        }
+
+        private SKBitmap ConvertWriteableBitmapToSKBitmap(WriteableBitmap writeableBitmap)
+        {
+            var skBitmap = new SKBitmap(writeableBitmap.PixelSize.Width, writeableBitmap.PixelSize.Height);
+
+            using (var buffer = writeableBitmap.Lock())
+            {
+                unsafe
+                {
+                    var ptr = (byte*)buffer.Address;
+                    var skPixels = skBitmap.GetPixels();
+                    var targetPtr = (byte*)skPixels.ToPointer();
+
+                    for (int y = 0; y < writeableBitmap.PixelSize.Height; y++)
+                    {
+                        for (int x = 0; x < writeableBitmap.PixelSize.Width; x++)
+                        {
+                            var sourceIndex = (y * buffer.RowBytes) + (x * 4);
+                            var targetIndex = (y * skBitmap.RowBytes) + (x * 4);
+
+                            targetPtr[targetIndex + 0] = ptr[sourceIndex + 2];
+                            targetPtr[targetIndex + 1] = ptr[sourceIndex + 1];
+                            targetPtr[targetIndex + 2] = ptr[sourceIndex + 0];
+                            targetPtr[targetIndex + 3] = ptr[sourceIndex + 3];
+                        }
+                    }
+                }
+            }
+
+            return skBitmap;
         }
 
         public void NewFile(int width, int height)
