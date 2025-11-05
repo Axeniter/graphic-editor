@@ -1,0 +1,26 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="GraphicEditor.Views.FilterDialog"
+        Title="New Image"
+        Width="300"
+        Height="200"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+
+    <StackPanel Margin="20" Spacing="15">
+        <TextBlock Text="Set Filter Intensity" FontSize="16"/>
+        
+        <StackPanel Spacing="5">
+            <Slider x:Name="IntensitySlider" />
+            <TextBlock Text="{Binding #IntensitySlider.Value, StringFormat='Intensity: {0:F1}'}" 
+                       HorizontalAlignment="Center"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button Content="Cancel" Click="CancelButton_Click" Width="80"/>
+            <Button Content="Apply" Click="ApplyButton_Click" Width="80" IsDefault="True"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

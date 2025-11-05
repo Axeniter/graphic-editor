@@ -57,6 +57,25 @@ namespace GraphicEditor.ViewModels
             }
         }
 
+        private async Task ShowFilterDialogAsync(IFilter filter)
+        {
+            var dialog = new FilterDialog(filter);
+            
+
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (desktop?.MainWindow != null)
+                {
+                    await dialog.ShowDialog(desktop.MainWindow);
+                    if (dialog.IsAplied)
+                    {
+                        filter.Intensity = dialog.Intensity;
+                        Editor.ApplyOperation(filter);
+                    }
+                }
+            }
+        }
+
         private async Task OpenFileAsync()
         {
             var filePath = await _fileDialogService.ShowOpenFileDialogAsync();

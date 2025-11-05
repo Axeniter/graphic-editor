@@ -14,4 +14,11 @@ namespace GraphicEditor.Models
         void UpdateInteraction(SKPoint position);
         void EndInteraction(SKPoint position);
     }
+
+    public interface IFilter : IImageOperation
+    {
+        float MinIntensity { get; }
+        float MaxIntensity { get; }
+        float Intensity { get; set; }
+    }
 }
