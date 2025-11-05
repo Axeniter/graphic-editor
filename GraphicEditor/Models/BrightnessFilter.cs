@@ -1,16 +1,11 @@
 ﻿using SkiaSharp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraphicEditor.Models
 {
     public class BrightnessFilter : IFilter
     {
         public string Name => "Brightness";
-
         public float MaxIntensity => 1f;
         public float MinIntensity => -1f;
         public float Intensity { get; set; } = 0;

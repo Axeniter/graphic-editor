@@ -6,11 +6,8 @@ namespace GraphicEditor.Models
     public class SepiaFilter : IFilter
     {
         public string Name => "Sepia";
-
         public float MinIntensity => 1f;
-
         public float MaxIntensity => 1f;
-
         public float Intensity { get; set; } = 1f;
 
         public SKBitmap ProcessImage(SKBitmap bitmap)

@@ -6,11 +6,8 @@ namespace GraphicEditor.Models
     public class ContrastFilter : IFilter
     {
         public string Name => "Contrast";
-
         public float MinIntensity => 0.5f;
-
         public float MaxIntensity => 2f;
-
         public float Intensity { get; set; } = 1f;
 
         public SKBitmap ProcessImage(SKBitmap bitmap)

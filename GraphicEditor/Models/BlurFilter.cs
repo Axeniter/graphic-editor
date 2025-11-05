@@ -1,19 +1,12 @@
 ﻿using SkiaSharp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GraphicEditor.Models
 {
     internal class BlurFilter : IFilter
     {
         public float MinIntensity => 0f;
-
         public float MaxIntensity => 20f;
         public float Intensity { get; set; } = 1f;
-
         public string Name => "Blur";
 
         public SKBitmap ProcessImage(SKBitmap bitmap)

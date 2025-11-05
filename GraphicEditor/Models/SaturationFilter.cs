@@ -6,11 +6,8 @@ namespace GraphicEditor.Models
     public class SaturationFilter : IFilter
     {
         public string Name => "Saturation";
-
         public float MinIntensity => 0f;
-
         public float MaxIntensity => 2f;
-
         public float Intensity { get; set; } = 0.5f;
 
         public SKBitmap ProcessImage(SKBitmap bitmap)

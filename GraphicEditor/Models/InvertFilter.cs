@@ -5,11 +5,8 @@ namespace GraphicEditor.Models
     public class InvertFilter : IFilter
     {
         public string Name => "Invert";
-
         public float MinIntensity => 1f;
-
         public float MaxIntensity => 1f;
-
         public float Intensity { get; set; } = 1f;
 
         public SKBitmap ProcessImage(SKBitmap bitmap)

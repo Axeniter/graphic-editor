@@ -5,11 +5,8 @@ namespace GraphicEditor.Models
     public class GrayscaleFilter : IFilter
     {
         public string Name => $"Grayscale";
-
         public float MinIntensity => 1f;
-
         public float MaxIntensity => 1f;
-
         public float Intensity { get; set; } = 1f;
 
         public SKBitmap ProcessImage(SKBitmap bitmap)
