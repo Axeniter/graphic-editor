@@ -62,7 +62,11 @@
                               HorizontalAlignment="Center">
                     <siv:SKImageView
                         Stretch="Uniform"
-                        Source="{Binding Editor.CurrentImage}" />
+                        Source="{Binding Editor.CurrentImage}"
+                        x:Name="Canvas"
+                        PointerPressed="OnPointerPressed"
+                        PointerMoved="OnPointerMoved"
+                        PointerReleased="OnPointerReleased"/>
                 </ScrollViewer>
             </Border>
         </Grid>

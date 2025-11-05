@@ -27,6 +27,10 @@ namespace GraphicEditor.Models
 
         public bool CanUndo => _undoImages.Count > 0;
         public bool CanRedo => _redoImages.Count > 0;
+        public void Refresh()
+        {
+            this.RaisePropertyChanged(nameof(CurrentImage));
+        }
 
         public void NewFile(int width, int height)
         {

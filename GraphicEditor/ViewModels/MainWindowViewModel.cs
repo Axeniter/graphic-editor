@@ -13,12 +13,14 @@ namespace GraphicEditor.ViewModels
         private ImageEditor _editor;
         private OperationService _operationService;
         private IFileDialogService _fileDialogService;
+        private ITool _currentTool;
 
         public MainWindowViewModel()
         {
             _editor = new ImageEditor();
             _operationService = new OperationService();
             _fileDialogService = new FileDialogService();
+            CurrentTool = new BrushTool();
 
             _editor.NewFile(800,600);
 
@@ -32,6 +34,11 @@ namespace GraphicEditor.ViewModels
         }
 
         public ImageEditor Editor => _editor;
+        public ITool CurrentTool
+        {
+            get => _currentTool;
+            set => this.RaiseAndSetIfChanged(ref _currentTool, value);
+        }
 
         private async Task ShowNewFileDialogAsync()
         {

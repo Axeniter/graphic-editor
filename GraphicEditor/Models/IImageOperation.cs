@@ -10,8 +10,8 @@ namespace GraphicEditor.Models
 
     public interface ITool : IImageOperation
     {
-        void BeginInteraction();
-        void UpdateInteraction();
-        void EndInteraction();
+        void BeginInteraction(SKPoint position, SKBitmap image);
+        void UpdateInteraction(SKPoint position);
+        void EndInteraction(SKPoint position);
     }
 }
