@@ -31,6 +31,13 @@ namespace GraphicEditor.ViewModels
             NewFileCommand = ReactiveCommand.CreateFromTask(ShowNewFileDialogAsync);
             RotateLeftCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_operationService.RotateLeft));
             RotateRightCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_operationService.RotateRight));
+            BlurCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Blur));
+            BrightnessCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Brightness));
+            InvertCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Invert));
+            SaturationCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Saturation));
+            ContrastCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Contrast));
+            GrayscaleCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Grayscale));
+            SepiaCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Sepia));
         }
 
         public ImageEditor Editor => _editor;
@@ -102,5 +109,12 @@ namespace GraphicEditor.ViewModels
         public ReactiveCommand<Unit, Unit> RedoCommand { get; }
         public ReactiveCommand<Unit, Unit> RotateLeftCommand { get; }
         public ReactiveCommand<Unit, Unit> RotateRightCommand { get; }
+        public ReactiveCommand<Unit, Unit> BlurCommand { get; }
+        public ReactiveCommand<Unit, Unit> BrightnessCommand { get; }
+        public ReactiveCommand<Unit, Unit> InvertCommand { get; }
+        public ReactiveCommand<Unit, Unit> SaturationCommand { get; }
+        public ReactiveCommand<Unit, Unit> ContrastCommand { get; }
+        public ReactiveCommand<Unit, Unit> GrayscaleCommand { get; }
+        public ReactiveCommand<Unit, Unit> SepiaCommand { get; }
     }
 }

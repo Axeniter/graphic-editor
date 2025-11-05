@@ -39,9 +39,13 @@
                     <MenuItem Header="Rotate right" Command="{Binding RotateRightCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Filters">
-					<MenuItem Header="Blur"/>
-                    <MenuItem Header="Brightness"/>
-                    <MenuItem Header="test_filter"/>
+					<MenuItem Header="Blur" Command="{Binding BlurCommand}"/>
+                    <MenuItem Header="Brightness" Command="{Binding BrightnessCommand}"/>
+                    <MenuItem Header="Invert" Command="{Binding InvertCommand}"/>
+                    <MenuItem Header="Saturation" Command="{Binding SaturationCommand}"/>
+                    <MenuItem Header="Contrast" Command="{Binding ContrastCommand}"/>
+                    <MenuItem Header="Grayscale" Command="{Binding GrayscaleCommand}"/>
+                    <MenuItem Header="Sepia" Command="{Binding SepiaCommand}"/>
                 </MenuItem>
             </Menu>
             <Button Content="Undo" Command="{Binding UndoCommand}"/>
