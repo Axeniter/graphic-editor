@@ -48,8 +48,8 @@
                     <MenuItem Header="Sepia" Command="{Binding SepiaCommand}"/>
                 </MenuItem>
             </Menu>
-            <Button Content="Undo" Command="{Binding UndoCommand}"/>
-            <Button Content="Redo" Command="{Binding RedoCommand}"/>
+            <Button Content="Undo" Command="{Binding UndoCommand}" IsEnabled="{Binding Editor.CanUndo}" />
+            <Button Content="Redo" Command="{Binding RedoCommand}" IsEnabled="{Binding Editor.CanRedo}"/>
         </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="auto, *">
             <Border Grid.Column="0" Background="#191919" Margin="5" Padding="10">
