@@ -3,7 +3,7 @@ using SkiaSharp;
 
 namespace GraphicEditor.Models
 {
-    internal class BlurFilter : IFilter
+    public class BlurFilter : IFilter
     {
         public float MinIntensity => 0f;
         public float MaxIntensity => 20f;
@@ -12,7 +12,7 @@ namespace GraphicEditor.Models
 
         public WriteableBitmap ProcessImage(WriteableBitmap bitmap)
         {
-            var result = bitmap.ToSKBitmap();
+            using var result = bitmap.ToSKBitmap();
 
             using var canvas = new SKCanvas(result);
             using var paint = new SKPaint();

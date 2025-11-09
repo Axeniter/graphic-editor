@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Avalonia.Media.Imaging;
+using SkiaSharp;
 using System;
 
 namespace GraphicEditor.Models
@@ -10,39 +11,35 @@ namespace GraphicEditor.Models
         public float MaxIntensity => 2f;
         public float Intensity { get; set; } = 0.5f;
 
-        public SKBitmap ProcessImage(SKBitmap bitmap)
+        public WriteableBitmap ProcessImage(WriteableBitmap bitmap)
         {
-            if (bitmap == null) return null;
-
-            var result = new SKBitmap(bitmap.Width, bitmap.Height, bitmap.ColorType, bitmap.AlphaType);
+            using var result = bitmap.ToSKBitmap();
 
             unsafe
             {
-                byte* srcPtr = (byte*)bitmap.GetPixels().ToPointer();
-                byte* dstPtr = (byte*)result.GetPixels().ToPointer();
+                byte* ptr = (byte*)result.GetPixels().ToPointer();
 
-                int totalPixels = bitmap.Width * bitmap.Height * 4;
+                int totalPixels = result.Width * result.Height * 4;
 
                 for (int i = 0; i < totalPixels; i += 4)
                 {
-                    float b = srcPtr[i] / 255.0f;
-                    float g = srcPtr[i + 1] / 255.0f;
-                    float r = srcPtr[i + 2] / 255.0f;
+                    float b = ptr[i] / 255.0f;
+                    float g = ptr[i + 1] / 255.0f;
+                    float r = ptr[i + 2] / 255.0f;
 
                     float luminance = 0.299f * r + 0.587f * g + 0.114f * b;
 
-                    r = luminance + (r - luminance) * Intensity;
-                    g = luminance + (g - luminance) * Intensity;
                     b = luminance + (b - luminance) * Intensity;
+                    g = luminance + (g - luminance) * Intensity;
+                    r = luminance + (r - luminance) * Intensity;
 
-                    dstPtr[i] = (byte)Math.Clamp(b * 255, 0, 255);
-                    dstPtr[i + 1] = (byte)Math.Clamp(g * 255, 0, 255);
-                    dstPtr[i + 2] = (byte)Math.Clamp(r * 255, 0, 255);
-                    dstPtr[i + 3] = srcPtr[i + 3];
+                    ptr[i] = (byte)Math.Clamp(b * 255, 0, 255);
+                    ptr[i + 1] = (byte)Math.Clamp(g * 255, 0, 255);
+                    ptr[i + 2] = (byte)Math.Clamp(r * 255, 0, 255);
                 }
             }
 
-            return result;
+            return result.ToWriteableBitmap();
         }
     }
 }
