@@ -11,18 +11,19 @@ namespace GraphicEditor.Models
 {
     public class ImageEditor : ReactiveObject, IDisposable
     {
-        private SKBitmap _currentImage;
-        private Stack<SKBitmap> _undoImages;
-        private Stack<SKBitmap> _redoImages;
+        private WriteableBitmap _currentImage;
+        private Stack<WriteableBitmap> _undoImages;
+        private Stack<WriteableBitmap> _redoImages;
 
         public ImageEditor()
         {
-            _undoImages = new Stack<SKBitmap>();
-            _redoImages = new Stack<SKBitmap>();
-            _currentImage = new SKBitmap();
+            _undoImages = new Stack<WriteableBitmap>();
+            _redoImages = new Stack<WriteableBitmap>();
+            _currentImage = new WriteableBitmap(new PixelSize(1, 1), new Vector(96, 96),
+                PixelFormat.Bgra8888, AlphaFormat.Opaque);
         }
 
-        public SKBitmap CurrentImage
+        public WriteableBitmap CurrentImage
         {
             get => _currentImage;
             private set => this.RaiseAndSetIfChanged(ref _currentImage, value);
@@ -30,89 +31,35 @@ namespace GraphicEditor.Models
 
         public bool CanUndo => _undoImages.Count > 0;
         public bool CanRedo => _redoImages.Count > 0;
-        public void Refresh()
-        {
-            this.RaisePropertyChanged(nameof(CurrentImage));
-        }
-
-        private WriteableBitmap ConvertSKBitmapToWriteableBitmap(SKBitmap skBitmap)
-        {
-            var writeableBitmap = new WriteableBitmap(
-                new PixelSize(skBitmap.Width, skBitmap.Height),
-                new Vector(96, 96),
-                PixelFormat.Bgra8888);
-
-            using (var buffer = writeableBitmap.Lock())
-            {
-                unsafe
-                {
-                    var ptr = (byte*)buffer.Address;
-
-                    var skPixels = skBitmap.GetPixels();
-                    var sourcePtr = (byte*)skPixels.ToPointer();
-
-                    for (int y = 0; y < skBitmap.Height; y++)
-                    {
-                        for (int x = 0; x < skBitmap.Width; x++)
-                        {
-                            var sourceIndex = (y * skBitmap.RowBytes) + (x * 4);
-                            var targetIndex = (y * buffer.RowBytes) + (x * 4);
-
-                            ptr[targetIndex + 0] = sourcePtr[sourceIndex + 2];
-                            ptr[targetIndex + 1] = sourcePtr[sourceIndex + 1];
-                            ptr[targetIndex + 2] = sourcePtr[sourceIndex + 0];
-                            ptr[targetIndex + 3] = sourcePtr[sourceIndex + 3];
-                        }
-                    }
-                }
-            }
-
-            return writeableBitmap;
-        }
-
-        private SKBitmap ConvertWriteableBitmapToSKBitmap(WriteableBitmap writeableBitmap)
-        {
-            var skBitmap = new SKBitmap(writeableBitmap.PixelSize.Width, writeableBitmap.PixelSize.Height);
-
-            using (var buffer = writeableBitmap.Lock())
-            {
-                unsafe
-                {
-                    var ptr = (byte*)buffer.Address;
-                    var skPixels = skBitmap.GetPixels();
-                    var targetPtr = (byte*)skPixels.ToPointer();
-
-                    for (int y = 0; y < writeableBitmap.PixelSize.Height; y++)
-                    {
-                        for (int x = 0; x < writeableBitmap.PixelSize.Width; x++)
-                        {
-                            var sourceIndex = (y * buffer.RowBytes) + (x * 4);
-                            var targetIndex = (y * skBitmap.RowBytes) + (x * 4);
-
-                            targetPtr[targetIndex + 0] = ptr[sourceIndex + 2];
-                            targetPtr[targetIndex + 1] = ptr[sourceIndex + 1];
-                            targetPtr[targetIndex + 2] = ptr[sourceIndex + 0];
-                            targetPtr[targetIndex + 3] = ptr[sourceIndex + 3];
-                        }
-                    }
-                }
-            }
-
-            return skBitmap;
-        }
 
         public void NewFile(int width, int height)
         {
-            var image = new SKBitmap(width, height);
-            using (var canvas = new SKCanvas(image))
-            {
-                canvas.Clear(SKColors.White);
-            }
             var oldImage = CurrentImage;
-            CurrentImage = image;
-            oldImage.Dispose();
+            CurrentImage = CreateWhiteBitmap(width, height);
+            oldImage?.Dispose();
             ClearRedoStack();
             ClearUndoStack();
+        }
+
+        private WriteableBitmap CreateWhiteBitmap(int width, int height)
+        {
+            var bitmap = new WriteableBitmap(new PixelSize(width, height), new Vector(96, 96),
+                PixelFormat.Bgra8888, AlphaFormat.Opaque);
+
+            using (var buffer = bitmap.Lock())
+            {
+                unsafe
+                {
+                    var ptr = (uint*)buffer.Address;
+                    var totalPixels = width * height;
+
+                    for (int i = 0; i < totalPixels; i++)
+                    {
+                        ptr[i] = 0xFFFFFFFF;
+                    }
+                }
+            }
+            return bitmap;
         }
 
         public void OpenFile(string path)
@@ -120,10 +67,10 @@ namespace GraphicEditor.Models
             try
             {
                 using var stream = File.OpenRead(path);
-                var image = SKBitmap.Decode(stream);
+                var image = WriteableBitmap.Decode(stream);
                 var oldImage = CurrentImage;
                 CurrentImage = image;
-                oldImage.Dispose();
+                oldImage?.Dispose();
                 ClearRedoStack();
                 ClearUndoStack();
             }
@@ -135,26 +82,52 @@ namespace GraphicEditor.Models
 
         public void SaveFile(string path)
         {
+            if (CurrentImage == null) return;
             try
             {
                 using var stream = File.Create(path);
-
                 var extension = Path.GetExtension(path).ToLower();
-                var format = extension switch
-                {
-                    ".jpg" or ".jpeg" => SKEncodedImageFormat.Jpeg,
-                    ".png" => SKEncodedImageFormat.Png,
-                    ".bmp" => SKEncodedImageFormat.Bmp,
-                    _ => SKEncodedImageFormat.Png
-                };
 
-                using var image = SKImage.FromBitmap(CurrentImage);
-                using var data = image.Encode(format, 100);
-                data.SaveTo(stream);
+                switch (extension)
+                {
+                    case ".png":
+                        SaveWithSkiaSharp(stream, SKEncodedImageFormat.Png, 100);
+                        break;
+                    case ".jpg":
+                    case ".jpeg":
+                        SaveWithSkiaSharp(stream, SKEncodedImageFormat.Jpeg, 100);
+                        break;
+                    case ".bmp":
+                        SaveWithSkiaSharp(stream, SKEncodedImageFormat.Bmp, 100);
+                        break;
+                    default:
+                        CurrentImage.Save(stream);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error saving file: {ex.Message}");
+            }
+        }
+
+        private void SaveWithSkiaSharp(Stream stream, SKEncodedImageFormat format, int quality)
+        {
+            if (CurrentImage == null) return;
+
+            try
+            {
+                using var skBitmap = CurrentImage.ToSKBitmap();
+                if (skBitmap == null) return;
+
+                using var image = SKImage.FromBitmap(skBitmap);
+                using var data = image.Encode(format, quality);
+                data.SaveTo(stream);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error saving with SkiaSharp: {ex.Message}");
+                throw;
             }
         }
 

@@ -1,18 +1,19 @@
-﻿using SkiaSharp;
+﻿using Avalonia.Media.Imaging;
+using Avalonia;
 
 namespace GraphicEditor.Models
 {
     public interface IImageOperation
     {
         string Name { get; }
-        SKBitmap ProcessImage(SKBitmap bitmap);
+        WriteableBitmap ProcessImage(WriteableBitmap bitmap);
     }
 
-    public interface ITool : IImageOperation
+    public interface ITool
     {
-        void BeginInteraction(SKPoint position, SKBitmap image);
-        void UpdateInteraction(SKPoint position);
-        void EndInteraction(SKPoint position);
+        void BeginInteraction(Point position, WriteableBitmap image);
+        void UpdateInteraction(Point position);
+        void EndInteraction(Point position);
     }
 
     public interface IFilter : IImageOperation
