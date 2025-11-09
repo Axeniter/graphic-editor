@@ -1,4 +1,4 @@
-﻿using SkiaSharp;
+﻿using Avalonia.Media.Imaging;
 
 namespace GraphicEditor.Models
 {
@@ -9,35 +9,30 @@ namespace GraphicEditor.Models
         public float MaxIntensity => 1f;
         public float Intensity { get; set; } = 1f;
 
-        public SKBitmap ProcessImage(SKBitmap bitmap)
+        public WriteableBitmap ProcessImage(WriteableBitmap bitmap)
         {
-            if (bitmap == null) return null;
-
-            var result = new SKBitmap(bitmap.Width, bitmap.Height, bitmap.ColorType, bitmap.AlphaType);
+            using var result = bitmap.ToSKBitmap();
 
             unsafe
             {
-                byte* srcPtr = (byte*)bitmap.GetPixels().ToPointer();
-                byte* dstPtr = (byte*)result.GetPixels().ToPointer();
+                byte* ptr = (byte*)result.GetPixels().ToPointer();
 
-                int totalPixels = bitmap.Width * bitmap.Height * 4;
+                int totalPixels = result.Width * result.Height * 4;
 
                 for (int i = 0; i < totalPixels; i += 4)
                 {
                     for (int channel = 0; channel < 3; channel++)
                     {
-                        byte original = srcPtr[i + channel];
+                        byte original = ptr[i + channel];
                         byte inverted = (byte)(255 - original);
 
                         byte final = (byte)(original + (inverted - original) * Intensity);
-                        dstPtr[i + channel] = final;
+                        ptr[i + channel] = final;
                     }
-
-                    dstPtr[i + 3] = srcPtr[i + 3];
                 }
             }
 
-            return result;
+            return result.ToWriteableBitmap();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Avalonia.Media.Imaging;
-using SkiaSharp;
 using System;
 
 namespace GraphicEditor.Models
