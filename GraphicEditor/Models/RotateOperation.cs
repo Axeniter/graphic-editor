@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Avalonia.Media.Imaging;
+using SkiaSharp;
 
 namespace GraphicEditor.Models
 {
@@ -20,12 +21,13 @@ namespace GraphicEditor.Models
             _angle = angle;
         }
 
-        public SKBitmap ProcessImage(SKBitmap bitmap)
+        public WriteableBitmap ProcessImage(WriteableBitmap bitmap)
         {
-            var newWidth = bitmap.Height;
-            var newHeight = bitmap.Width;
+            using var skbitmap = bitmap.ToSKBitmap();
+            var newWidth = skbitmap.Height;
+            var newHeight = skbitmap.Width;
 
-            var rotatedBitmap = new SKBitmap(newWidth, newHeight, bitmap.ColorType, bitmap.AlphaType);
+            using var rotatedBitmap = new SKBitmap(newWidth, newHeight, skbitmap.ColorType, skbitmap.AlphaType);
 
             using (var canvas = new SKCanvas(rotatedBitmap))
             using (var paint = new SKPaint { IsAntialias = true })
@@ -41,12 +43,10 @@ namespace GraphicEditor.Models
                     canvas.RotateDegrees(-90);
                 }
 
-                canvas.DrawBitmap(bitmap, 0, 0, paint);
+                canvas.DrawBitmap(skbitmap, 0, 0, paint);
             }
 
-            return rotatedBitmap;
+            return rotatedBitmap.ToWriteableBitmap();
         }
     }
-
-
 }
