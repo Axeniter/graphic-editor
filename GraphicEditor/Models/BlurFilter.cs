@@ -1,4 +1,5 @@
-﻿using SkiaSharp;
+﻿using Avalonia.Media.Imaging;
+using SkiaSharp;
 
 namespace GraphicEditor.Models
 {
@@ -9,19 +10,17 @@ namespace GraphicEditor.Models
         public float Intensity { get; set; } = 1f;
         public string Name => "Blur";
 
-        public SKBitmap ProcessImage(SKBitmap bitmap)
+        public WriteableBitmap ProcessImage(WriteableBitmap bitmap)
         {
-            if (bitmap == null) return null;
-
-            var result = new SKBitmap(bitmap.Width, bitmap.Height, bitmap.ColorType, bitmap.AlphaType);
+            var result = bitmap.ToSKBitmap();
 
             using var canvas = new SKCanvas(result);
             using var paint = new SKPaint();
 
             paint.ImageFilter = SKImageFilter.CreateBlur(Intensity, Intensity);
-            canvas.DrawBitmap(bitmap, 0, 0, paint);
+            canvas.DrawBitmap(result, 0, 0, paint);
 
-            return result;
+            return result.ToWriteableBitmap();
         }
     }
 }
