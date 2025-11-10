@@ -1,7 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Input;
 using GraphicEditor.ViewModels;
-using GraphicEditor.Models;
 
 namespace GraphicEditor.Views
 {
@@ -17,13 +16,13 @@ namespace GraphicEditor.Views
         {
             if (DataContext is MainWindowViewModel vm && vm.CurrentTool != null)
             {
-                var position = e.GetPosition(Canvas).ToSKPoint();
+                var position = e.GetPosition(Canvas);
                 var bitmap = vm.Editor.CurrentImage;
 
                 vm.Editor.SaveState();
                 vm.CurrentTool.BeginInteraction(position, bitmap);
                 _isDrawing = true;
-                vm.Editor.Refresh();
+                Canvas.InvalidateVisual();
             }
         }
 
@@ -31,9 +30,9 @@ namespace GraphicEditor.Views
         {
             if (_isDrawing && DataContext is MainWindowViewModel vm && vm.CurrentTool != null)
             {
-                var position = e.GetPosition(Canvas).ToSKPoint();
+                var position = e.GetPosition(Canvas);
                 vm.CurrentTool.UpdateInteraction(position);
-                vm.Editor.Refresh();
+                Canvas.InvalidateVisual();
             }
         }
 
@@ -41,10 +40,10 @@ namespace GraphicEditor.Views
         {
             if (_isDrawing && DataContext is MainWindowViewModel vm && vm.CurrentTool != null)
             {
-                var position = e.GetPosition(Canvas).ToSKPoint();
+                var position = e.GetPosition(Canvas);
                 vm.CurrentTool.EndInteraction(position);
                 _isDrawing = false;
-                vm.Editor.Refresh();
+                Canvas.InvalidateVisual();
             }
         }
     }

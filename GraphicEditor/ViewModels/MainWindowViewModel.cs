@@ -1,5 +1,6 @@
 ﻿using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Media;
 using GraphicEditor.Models;
 using GraphicEditor.Views;
 using ReactiveUI;
@@ -14,13 +15,15 @@ namespace GraphicEditor.ViewModels
         private OperationService _operationService;
         private IFileDialogService _fileDialogService;
         private ITool _currentTool;
+        private BrushTool _brushTool;
 
         public MainWindowViewModel()
         {
             _editor = new ImageEditor();
             _operationService = new OperationService();
             _fileDialogService = new FileDialogService();
-            CurrentTool = new BrushTool();
+            _brushTool = new BrushTool();
+            CurrentTool = _brushTool;
 
             _editor.NewFile(800,600);
 
@@ -39,7 +42,14 @@ namespace GraphicEditor.ViewModels
             GrayscaleCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Grayscale));
             SepiaCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Sepia));
         }
+        private Color _drawColor = Colors.Red;
 
+        public BrushTool BrushTool => _brushTool;
+        public Color DrawColor
+        {
+            get => _drawColor;
+            set => this.RaiseAndSetIfChanged(ref _drawColor, value);
+        }
         public ImageEditor Editor => _editor;
         public ITool CurrentTool
         {
@@ -100,7 +110,6 @@ namespace GraphicEditor.ViewModels
                 Editor.SaveFile(filePath);
             }
         }
-
 
         public ReactiveCommand<Unit, Unit> NewFileCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveFileCommand { get; }

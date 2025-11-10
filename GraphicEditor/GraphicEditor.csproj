@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia" Version="11.3.8" />
+    <PackageReference Include="Avalonia.Controls.ColorPicker" Version="11.3.8" />
     <PackageReference Include="Avalonia.Desktop" Version="11.3.8" />
     <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.8" />
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.8" />
@@ -24,7 +25,6 @@
       <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Avalonia.ReactiveUI" Version="11.3.8" />
-    <PackageReference Include="SkiaImageView.Avalonia11" Version="1.5.0" />
     <PackageReference Include="SkiaSharp" Version="3.119.1" />
   </ItemGroup>
 </Project>

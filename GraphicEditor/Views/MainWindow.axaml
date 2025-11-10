@@ -1,10 +1,8 @@
 ﻿<Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:GraphicEditor.ViewModels"
-        xmlns:conv="using:GraphicEditor.Converters"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:siv="using:SkiaImageView"
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
         x:Class="GraphicEditor.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
@@ -48,7 +46,7 @@
                     <MenuItem Header="Sepia" Command="{Binding SepiaCommand}"/>
                 </MenuItem>
             </Menu>
-            <Button Content="Undo" Command="{Binding UndoCommand}" IsEnabled="{Binding Editor.CanUndo}" />
+            <Button Content="Undo" Command="{Binding UndoCommand}" IsEnabled="{Binding Editor.CanUndo}"/>
             <Button Content="Redo" Command="{Binding RedoCommand}" IsEnabled="{Binding Editor.CanRedo}"/>
         </StackPanel>
         <Grid Grid.Row="1" ColumnDefinitions="auto, *">
@@ -56,23 +54,44 @@
                 <StackPanel Orientation="Vertical" Spacing="5">
                     <RadioButton GroupName="Tools" Content="Select"/>
                     <RadioButton GroupName="Tools" Content="Crop"/>
-                    <RadioButton GroupName="Tools" Content="Draw"/>
+                    <RadioButton GroupName="Tools" Content="Draw">
+                        <Button.Flyout>
+                            <Flyout>
+                                <StackPanel Margin="5">
+                                    <TextBlock Text="{Binding BrushTool.BrushColor, StringFormat='Color: {0}'}"/>
+                                    <ColorPicker Color="{Binding BrushTool.BrushColor}"/>
+                                    <TextBlock Text="{Binding BrushTool.BrushSize, StringFormat='Size: {0:F0}'}"/>
+                                    <Slider Minimum="0" 
+                                            Maximum="100" 
+                                            Value="{Binding BrushTool.BrushSize}" 
+                                            TickFrequency="1"
+                                            IsSnapToTickEnabled="True"/>
+                                </StackPanel>
+                            </Flyout>
+                        </Button.Flyout>
+                    </RadioButton>
                 </StackPanel>
             </Border>
-            <Border Grid.Column="1" Background="#2B2B2B" Margin="5" Padding="10">
-                <ScrollViewer HorizontalScrollBarVisibility="Auto" 
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" 
                               VerticalScrollBarVisibility="Auto"
-                              VerticalAlignment="Center"
-                              HorizontalAlignment="Center">
-                    <siv:SKImageView
-                        Stretch="Uniform"
-                        Source="{Binding Editor.CurrentImage}"
-                        x:Name="Canvas"
-                        PointerPressed="OnPointerPressed"
-                        PointerMoved="OnPointerMoved"
-                        PointerReleased="OnPointerReleased"/>
-                </ScrollViewer>
-            </Border>
+                              Grid.Column="1">
+                <Border Background="#2B2B2B" Margin="5" Padding="10">
+                    <Border BorderBrush="Black" 
+                            BorderThickness="1" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center"
+                            BoxShadow="2 2 4 0 #40000000">
+                        <Image Source="{Binding Editor.CurrentImage}" 
+                               Stretch="Uniform"
+                               MaxHeight="{Binding Editor.CurrentImage.PixelSize.Height}"
+                               MaxWidth="{Binding Editor.CurrentImage.PixelSize.Width}"
+                               x:Name="Canvas" 
+                               PointerPressed="OnPointerPressed"
+                               PointerMoved="OnPointerMoved"
+                               PointerReleased="OnPointerReleased"/>
+                    </Border>
+                </Border>
+            </ScrollViewer>
         </Grid>
     </Grid>
 
