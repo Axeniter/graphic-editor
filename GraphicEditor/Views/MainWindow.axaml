@@ -52,18 +52,18 @@
         <Grid Grid.Row="1" ColumnDefinitions="auto, *">
             <Border Grid.Column="0" Background="#191919" Margin="5" Padding="10">
                 <StackPanel Orientation="Vertical" Spacing="5">
-                    <RadioButton GroupName="Tools" Content="Select"/>
-                    <RadioButton GroupName="Tools" Content="Crop"/>
-                    <RadioButton GroupName="Tools" Content="Draw">
+                    <RadioButton GroupName="Tools" Content="Select" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Selection}"/>
+                    <RadioButton GroupName="Tools" Content="Crop" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Crop}"/>
+                    <RadioButton GroupName="Tools" Content="Brush" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Brush}">
                         <Button.Flyout>
                             <Flyout>
                                 <StackPanel Margin="5">
-                                    <TextBlock Text="{Binding BrushTool.BrushColor, StringFormat='Color: {0}'}"/>
-                                    <ColorPicker Color="{Binding BrushTool.BrushColor}"/>
-                                    <TextBlock Text="{Binding BrushTool.BrushSize, StringFormat='Size: {0:F0}'}"/>
+                                    <TextBlock Text="{Binding ToolBox.Brush.BrushColor, StringFormat='Color: {0}'}"/>
+                                    <ColorPicker Color="{Binding ToolBox.Brush.BrushColor}"/>
+                                    <TextBlock Text="{Binding ToolBox.Brush.BrushSize, StringFormat='Size: {0:F0}'}"/>
                                     <Slider Minimum="0" 
                                             Maximum="100" 
-                                            Value="{Binding BrushTool.BrushSize}" 
+                                            Value="{Binding ToolBox.Brush.BrushSize}" 
                                             TickFrequency="1"
                                             IsSnapToTickEnabled="True"/>
                                 </StackPanel>

@@ -12,18 +12,15 @@ namespace GraphicEditor.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private ImageEditor _editor;
-        private OperationService _operationService;
+        private ToolBox _toolBox;
         private IFileDialogService _fileDialogService;
         private ITool _currentTool;
-        private BrushTool _brushTool;
 
         public MainWindowViewModel()
         {
             _editor = new ImageEditor();
-            _operationService = new OperationService();
+            _toolBox = new ToolBox();
             _fileDialogService = new FileDialogService();
-            _brushTool = new BrushTool();
-            CurrentTool = _brushTool;
 
             _editor.NewFile(800,600);
 
@@ -32,19 +29,20 @@ namespace GraphicEditor.ViewModels
             OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileAsync);
             SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFileAsync);
             NewFileCommand = ReactiveCommand.CreateFromTask(ShowNewFileDialogAsync);
-            RotateLeftCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_operationService.RotateLeft));
-            RotateRightCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_operationService.RotateRight));
-            BlurCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Blur));
-            BrightnessCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Brightness));
-            InvertCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Invert));
-            SaturationCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Saturation));
-            ContrastCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Contrast));
-            GrayscaleCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Grayscale));
-            SepiaCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_operationService.Sepia));
+            RotateLeftCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_toolBox.RotateLeft));
+            RotateRightCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_toolBox.RotateRight));
+            BlurCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Blur));
+            BrightnessCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Brightness));
+            InvertCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Invert));
+            SaturationCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Saturation));
+            ContrastCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Contrast));
+            GrayscaleCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Grayscale));
+            SepiaCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Sepia));
+            SetToolCommand = ReactiveCommand.Create<ITool>(SetTool);
         }
         private Color _drawColor = Colors.Red;
 
-        public BrushTool BrushTool => _brushTool;
+        public ToolBox ToolBox => _toolBox;
         public Color DrawColor
         {
             get => _drawColor;
@@ -54,7 +52,7 @@ namespace GraphicEditor.ViewModels
         public ITool CurrentTool
         {
             get => _currentTool;
-            set => this.RaiseAndSetIfChanged(ref _currentTool, value);
+            private set => this.RaiseAndSetIfChanged(ref _currentTool, value);
         }
 
         private async Task ShowNewFileDialogAsync()
@@ -111,6 +109,10 @@ namespace GraphicEditor.ViewModels
             }
         }
 
+        private void SetTool(ITool tool)
+        {
+            CurrentTool = tool;
+        }
         public ReactiveCommand<Unit, Unit> NewFileCommand { get; }
         public ReactiveCommand<Unit, Unit> SaveFileCommand { get; }
         public ReactiveCommand<Unit, Unit> OpenFileCommand { get; }
@@ -125,5 +127,6 @@ namespace GraphicEditor.ViewModels
         public ReactiveCommand<Unit, Unit> ContrastCommand { get; }
         public ReactiveCommand<Unit, Unit> GrayscaleCommand { get; }
         public ReactiveCommand<Unit, Unit> SepiaCommand { get; }
+        public ReactiveCommand<ITool, Unit> SetToolCommand { get; }
     }
 }
