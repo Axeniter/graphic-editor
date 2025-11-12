@@ -1,11 +1,10 @@
-﻿using GraphicEditor.Models.Tools;
-
-namespace GraphicEditor.Models
+﻿namespace GraphicEditor.Models
 {
     public class ToolBox
     {
         public IImageOperation RotateLeft { get; } = new RotateOperation(-90);
         public IImageOperation RotateRight { get; } = new RotateOperation(90);
+        public CropOperation Crop { get; } = new CropOperation();
 
         public IFilter Blur { get; } = new BlurFilter();
         public IFilter Brightness { get; } = new BrightnessFilter();
@@ -16,7 +15,7 @@ namespace GraphicEditor.Models
         public IFilter Sepia { get; } = new SepiaFilter();
 
         public BrushTool Brush { get; } = new BrushTool();
-        public CropTool Crop { get; } = new CropTool();
-        public SelectionTool Selection { get; } = new SelectionTool();
+        //public CropTool Crop { get; } = new CropTool();
+        //public SelectionTool Selection { get; } = new SelectionTool();
     }
 }

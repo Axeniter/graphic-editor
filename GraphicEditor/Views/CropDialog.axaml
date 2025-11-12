@@ -1,0 +1,38 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="GraphicEditor.Views.CropDialog"
+        Title="Apply Crop"
+        Width="300"
+        Height="300"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+    
+    <StackPanel Margin="20" Spacing="10">
+        <TextBlock Text="Crop image" FontSize="16" FontWeight="Bold"/>
+        
+        <Grid ColumnDefinitions="*,*" RowDefinitions="auto,auto,auto,auto" RowSpacing="10" ColumnSpacing="10">
+            <TextBlock Text="Start X:" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center"/>
+            <NumericUpDown x:Name="StartXBox" Grid.Row="0" Grid.Column="1" 
+                          Minimum="0" FormatString="F0" Increment="1"/>
+            
+            <TextBlock Text="Start Y:" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center"/>
+            <NumericUpDown x:Name="StartYBox" Grid.Row="1" Grid.Column="1" 
+                          Minimum="0" FormatString="F0" Increment="1"/>
+            
+            <TextBlock Text="End X:" Grid.Row="2" Grid.Column="0" VerticalAlignment="Center"/>
+            <NumericUpDown x:Name="EndXBox" Grid.Row="2" Grid.Column="1" 
+                          Minimum="0" FormatString="F0" Increment="1"/>
+            
+            <TextBlock Text="End Y:" Grid.Row="3" Grid.Column="0" VerticalAlignment="Center"/>
+            <NumericUpDown x:Name="EndYBox" Grid.Row="3" Grid.Column="1" 
+                          Minimum="0" FormatString="F0" Increment="1"/>
+        </Grid>
+        
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+            <Button x:Name="CancelButton" Content="Cancel" Click="CancelButton_Click"/>
+            <Button x:Name="ApplyButton" Content="Apply" IsDefault="True" Click="ApplyButton_Click"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

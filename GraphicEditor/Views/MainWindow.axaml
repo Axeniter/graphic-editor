@@ -35,6 +35,7 @@
                 <MenuItem Header="Edit">
 					<MenuItem Header="Rotate left" Command="{Binding RotateLeftCommand}"/>
                     <MenuItem Header="Rotate right" Command="{Binding RotateRightCommand}"/>
+                    <MenuItem Header="Crop" Command="{Binding CropCommand}"/>
                 </MenuItem>
                 <MenuItem Header="Filters">
 					<MenuItem Header="Blur" Command="{Binding BlurCommand}"/>
@@ -52,8 +53,8 @@
         <Grid Grid.Row="1" ColumnDefinitions="auto, *">
             <Border Grid.Column="0" Background="#191919" Margin="5" Padding="10">
                 <StackPanel Orientation="Vertical" Spacing="5">
-                    <RadioButton GroupName="Tools" Content="Select" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Selection}"/>
-                    <RadioButton GroupName="Tools" Content="Crop" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Crop}"/>
+               <!--     <RadioButton GroupName="Tools" Content="Select" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Selection}"/>
+                    <RadioButton GroupName="Tools" Content="Crop" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Crop}"/> -->
                     <RadioButton GroupName="Tools" Content="Brush" Command="{Binding SetToolCommand}" CommandParameter="{Binding ToolBox.Brush}">
                         <Button.Flyout>
                             <Flyout>
@@ -81,7 +82,7 @@
                             HorizontalAlignment="Center" 
                             VerticalAlignment="Center"
                             BoxShadow="2 2 4 0 #40000000">
-                        <Image Source="{Binding Editor.CurrentImage}" 
+                            <Image Source="{Binding Editor.CurrentImage}" 
                                Stretch="Uniform"
                                MaxHeight="{Binding Editor.CurrentImage.PixelSize.Height}"
                                MaxWidth="{Binding Editor.CurrentImage.PixelSize.Width}"

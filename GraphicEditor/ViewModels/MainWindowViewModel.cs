@@ -29,6 +29,7 @@ namespace GraphicEditor.ViewModels
             OpenFileCommand = ReactiveCommand.CreateFromTask(OpenFileAsync);
             SaveFileCommand = ReactiveCommand.CreateFromTask(SaveFileAsync);
             NewFileCommand = ReactiveCommand.CreateFromTask(ShowNewFileDialogAsync);
+            CropCommand = ReactiveCommand.CreateFromTask(ShowCropDialogAsync);
             RotateLeftCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_toolBox.RotateLeft));
             RotateRightCommand = ReactiveCommand.Create(() => Editor.ApplyOperation(_toolBox.RotateRight));
             BlurCommand = ReactiveCommand.CreateFromTask(() => ShowFilterDialogAsync(_toolBox.Blur));
@@ -91,6 +92,24 @@ namespace GraphicEditor.ViewModels
             }
         }
 
+        private async Task ShowCropDialogAsync()
+        {
+            var dialog = new CropDialog(Editor.CurrentImage);
+
+            if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            {
+                if (desktop?.MainWindow != null)
+                {
+                    var result = await dialog.ShowDialog<Rect?>(desktop.MainWindow);
+                    if (result.HasValue)
+                    {
+                        ToolBox.Crop.CropRect = result.Value;
+                        Editor.ApplyOperation(ToolBox.Crop);
+                    }
+                }
+            }
+        }
+
         private async Task OpenFileAsync()
         {
             var filePath = await _fileDialogService.ShowOpenFileDialogAsync();
@@ -128,5 +147,6 @@ namespace GraphicEditor.ViewModels
         public ReactiveCommand<Unit, Unit> GrayscaleCommand { get; }
         public ReactiveCommand<Unit, Unit> SepiaCommand { get; }
         public ReactiveCommand<ITool, Unit> SetToolCommand { get; }
+        public ReactiveCommand<Unit, Unit> CropCommand { get; }
     }
 }

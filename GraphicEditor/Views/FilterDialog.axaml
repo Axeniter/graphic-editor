@@ -3,14 +3,14 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         x:Class="GraphicEditor.Views.FilterDialog"
-        Title="New Image"
+        Title="Apply Filter"
         Width="300"
         Height="200"
         WindowStartupLocation="CenterOwner"
         CanResize="False">
 
     <StackPanel Margin="20" Spacing="15">
-        <TextBlock Text="Set Filter Intensity" FontSize="16"/>
+        <TextBlock Text="Set filter intensity" FontSize="16"/>
         
         <StackPanel Spacing="5">
             <Slider x:Name="IntensitySlider" />
